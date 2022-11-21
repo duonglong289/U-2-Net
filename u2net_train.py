@@ -30,30 +30,31 @@ bce_loss = nn.BCELoss(size_average=True)
 
 def muti_bce_loss_fusion(d0, d1, d2, d3, d4, d5, d6, labels_v):
 
-	loss0 = bce_loss(d0,labels_v)
-	loss1 = bce_loss(d1,labels_v)
-	loss2 = bce_loss(d2,labels_v)
-	loss3 = bce_loss(d3,labels_v)
-	loss4 = bce_loss(d4,labels_v)
-	loss5 = bce_loss(d5,labels_v)
-	loss6 = bce_loss(d6,labels_v)
+    loss0 = bce_loss(d0,labels_v)
+    loss1 = bce_loss(d1,labels_v)
+    loss2 = bce_loss(d2,labels_v)
+    loss3 = bce_loss(d3,labels_v)
+    loss4 = bce_loss(d4,labels_v)
+    loss5 = bce_loss(d5,labels_v)
+    loss6 = bce_loss(d6,labels_v)
 
-	loss = loss0 + loss1 + loss2 + loss3 + loss4 + loss5 + loss6
-	print("l0: %3f, l1: %3f, l2: %3f, l3: %3f, l4: %3f, l5: %3f, l6: %3f\n"%(loss0.data.item(),loss1.data.item(),loss2.data.item(),loss3.data.item(),loss4.data.item(),loss5.data.item(),loss6.data.item()))
+    loss = loss0 + loss1 + loss2 + loss3 + loss4 + loss5 + loss6
+    print("l0: %3f, l1: %3f, l2: %3f, l3: %3f, l4: %3f, l5: %3f, l6: %3f\n"%(loss0.data.item(),loss1.data.item(),loss2.data.item(),loss3.data.item(),loss4.data.item(),loss5.data.item(),loss6.data.item()))
 
-	return loss0, loss
+    return loss0, loss
 
 
 # ------- 2. set the directory of training dataset --------
 
 model_name = 'u2net' #'u2netp'
 
-data_dir = os.path.join(os.getcwd(), 'train_data' + os.sep)
-tra_image_dir = os.path.join('DUTS', 'DUTS-TR', 'DUTS-TR', 'im_aug' + os.sep)
-tra_label_dir = os.path.join('DUTS', 'DUTS-TR', 'DUTS-TR', 'gt_aug' + os.sep)
+# data_dir = os.path.join(os.getcwd(), 'train_data' + os.sep)
+data_dir = '/mnt/ssd/techainer/table_project/TableGeneration/output'
+tra_image_dir = os.path.join(data_dir, "simple_table", "img")
+tra_label_dir = os.path.join(data_dir, "simple_table", "mask")
 
 image_ext = '.jpg'
-label_ext = '.png'
+label_ext = '.jpg'
 
 model_dir = os.path.join(os.getcwd(), 'saved_models', model_name + os.sep)
 
@@ -63,19 +64,19 @@ batch_size_val = 1
 train_num = 0
 val_num = 0
 
-tra_img_name_list = glob.glob(data_dir + tra_image_dir + '*' + image_ext)
+tra_img_name_list = glob.glob(os.path.join(tra_image_dir, "*"))
 
 tra_lbl_name_list = []
 for img_path in tra_img_name_list:
-	img_name = img_path.split(os.sep)[-1]
+    img_name = img_path.split(os.sep)[-1]
 
-	aaa = img_name.split(".")
-	bbb = aaa[0:-1]
-	imidx = bbb[0]
-	for i in range(1,len(bbb)):
-		imidx = imidx + "." + bbb[i]
+    aaa = img_name.split(".")
+    bbb = aaa[0:-1]
+    imidx = bbb[0]
+    for i in range(1,len(bbb)):
+        imidx = imidx + "." + bbb[i]
 
-	tra_lbl_name_list.append(data_dir + tra_label_dir + imidx + label_ext)
+    tra_lbl_name_list.append(os.path.join(tra_label_dir,  imidx + label_ext))
 
 print("---")
 print("train images: ", len(tra_img_name_list))
